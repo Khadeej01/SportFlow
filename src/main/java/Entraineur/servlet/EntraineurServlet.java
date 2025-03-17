@@ -23,7 +23,7 @@ public class EntraineurServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Affiche le formulaire d'ajout d'un entraîneur
+
         request.getRequestDispatcher("/entraineur-form.jsp").forward(request, response);
     }
 
@@ -40,7 +40,7 @@ public class EntraineurServlet extends HttpServlet {
 
         try {
             entraineurDAO.createEntraineur(entraineur);
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("login.jsp");
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendRedirect("index.jsp");

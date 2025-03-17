@@ -16,6 +16,9 @@ public class Admin extends User {
         this.role = role;
     }
 
+    public Admin(int id, String nom, String email, String password) {
+    }
+
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }

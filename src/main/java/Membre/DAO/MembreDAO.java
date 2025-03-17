@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import Membre.Model.Membre;
 import utils.DatabaseConnection;
 
@@ -101,6 +104,7 @@ public class MembreDAO {
     }
 
 
+
     public Membre readMembreByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM membre WHERE email = ?";
         Connection conn = null;
@@ -133,6 +137,36 @@ public class MembreDAO {
             DatabaseConnection.closeConnection(conn);
         }
         return membre;
+    }
+
+    public List<Membre> getAllMembres() throws SQLException {
+        List<Membre> membres = new ArrayList<>();
+        String sql = "SELECT * FROM membre";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DatabaseConnection.getConnection();
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Membre membre = new Membre(
+                        rs.getInt("id_membre"),
+                        rs.getString("nom"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getDate("date_naissance"),
+                        rs.getString("sport_pratique")
+                );
+                membres.add(membre);
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            DatabaseConnection.closeConnection(conn);
+        }
+        return membres;
     }
 }
 

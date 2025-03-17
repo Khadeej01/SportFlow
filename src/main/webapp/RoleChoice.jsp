@@ -13,7 +13,7 @@
     <div class="space-y-4">
         <a href="membre-form.jsp" class="block text-center bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">I am a Member</a>
         <a href="entraineur-form.jsp" class="block text-center bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">I am a Coach</a>
-        <a href="admin-form.jsp" class="block text-center bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">I am a Admin</a>
+        <a href="admin-dashboard.jsp" class="block text-center bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">I am a Admin</a>
     </div>
 </div>
 </body>

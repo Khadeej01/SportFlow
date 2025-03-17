@@ -1,22 +1,17 @@
 package Admin.DAO;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import utils.DatabaseConnection;
 import Admin.Model.Admin;
-
+import utils.DatabaseConnection;
 
 public class AdminDAO {
-    // Créer un administrateur
     public void createAdmin(Admin admin) throws SQLException {
         String sql = "INSERT INTO admin (nom, email, password, role) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
-        ResultSet rs = null;
 
         try {
             conn = DatabaseConnection.getConnection();
@@ -27,21 +22,16 @@ public class AdminDAO {
             stmt.setString(4, admin.getRole());
             stmt.executeUpdate();
 
-            rs = stmt.getGeneratedKeys();
+            ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 admin.setId(rs.getInt(1));
             }
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la création de l'admin : " + e.getMessage());
-            throw e;
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (stmt != null) try { stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (stmt != null) stmt.close();
             DatabaseConnection.closeConnection(conn);
         }
     }
 
-    // Lire un administrateur par ID
     public Admin readAdmin(int id) throws SQLException {
         String sql = "SELECT * FROM admin WHERE id_admin = ?";
         Connection conn = null;
@@ -58,22 +48,17 @@ public class AdminDAO {
                         rs.getInt("id_admin"),
                         rs.getString("nom"),
                         rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("role")
+                        rs.getString("password")
                 );
             }
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la lecture de l'admin : " + e.getMessage());
-            throw e;
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (stmt != null) try { stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
             DatabaseConnection.closeConnection(conn);
         }
         return null;
     }
 
-    // Mettre à jour un administrateur
     public void updateAdmin(Admin admin) throws SQLException {
         String sql = "UPDATE admin SET nom = ?, email = ?, password = ?, role = ? WHERE id_admin = ?";
         Connection conn = null;
@@ -88,16 +73,12 @@ public class AdminDAO {
             stmt.setString(4, admin.getRole());
             stmt.setInt(5, admin.getId());
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la mise à jour de l'admin : " + e.getMessage());
-            throw e;
         } finally {
-            if (stmt != null) try { stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (stmt != null) stmt.close();
             DatabaseConnection.closeConnection(conn);
         }
     }
 
-    // Supprimer un administrateur
     public void deleteAdmin(int id) throws SQLException {
         String sql = "DELETE FROM admin WHERE id_admin = ?";
         Connection conn = null;
@@ -108,44 +89,41 @@ public class AdminDAO {
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la suppression de l'admin : " + e.getMessage());
-            throw e;
         } finally {
-            if (stmt != null) try { stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (stmt != null) stmt.close();
             DatabaseConnection.closeConnection(conn);
         }
     }
 
-    // Lire un administrateur par email (pour l'authentification)
     public Admin readAdminByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM admin WHERE email = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
+        Admin admin = null;
 
         try {
             conn = DatabaseConnection.getConnection();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, email);
             rs = stmt.executeQuery();
+
             if (rs.next()) {
-                return new Admin(
+                admin = new Admin(
                         rs.getInt("id_admin"),
                         rs.getString("nom"),
                         rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("role")
+                        rs.getString("password")
                 );
             }
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la lecture de l'admin par email : " + e.getMessage());
+            System.err.println("Erreur lors de la lecture de l'admin : " + e.getMessage());
             throw e;
         } finally {
             if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
             if (stmt != null) try { stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
             DatabaseConnection.closeConnection(conn);
         }
-        return null;
+        return admin;
     }
 }
